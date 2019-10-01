@@ -1,0 +1,3 @@
+#!/bin/bash
+psql -t -c 'SELECT ci.NAME_VALUE NAME_VALUE FROM ca, ct_log_entry ctle, certificate_identity ci, certificate c WHERE ci.ISSUER_CA_ID = ca.ID AND c.ID = ctle.CERTIFICATE_ID AND reverse(lower(ci.NAME_VALUE)) LIKE reverse(lower('\'%.$1\'')) AND ci.CERTIFICATE_ID = c.ID GROUP BY c.ID, ci.ISSUER_CA_ID, ca.NAME, ci.NAME_VALUE ORDER BY min(ctle.ENTRY_TIMESTAMP) DESC, NAME_VALUE, ca.NAME;' -h crt.sh -w -p 5432 -U guest certwatch | grep -v '*' | anew $2
+
